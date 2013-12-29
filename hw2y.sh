@@ -32,7 +32,7 @@ fi
 
 
 
-while getopts “hdt:” OPTION
+while getopts “hdu:” OPTION
 do
      case $OPTION in
          h)
