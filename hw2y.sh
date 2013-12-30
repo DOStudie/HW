@@ -25,8 +25,9 @@ exit 1
 PASSFILE="/etc/shadow"
 #file that conatin passwords in the system
 
-TMPFILE="/tmp/tmpy1"
+SHADOWTMP="/tmp/shadowtmp"
 #will contain all users with passwords that exist in the system
+
 
 DPASS=
 #if set mean that decryption is needed
@@ -52,8 +53,8 @@ if [ ! -r $PASSFILE ]; then
 fi 
 #Checking if the $PASSFILE file can be read by this user
 
-grep -v ":\*:" $PASSFILE | grep -v ":\!" > $TMPFILE
-#Output all users with passwords to $TMPFILE
+grep -v ":\*:" $PASSFILE | grep -v ":\!" > $SHADOWTMP
+#Output all users with passwords to $SHADOWTMP
 
 while getopts "ahdu:j:" OPTION
 do
@@ -64,7 +65,7 @@ do
              ;;
          a)
              printf "\nAll users with passwords:\n"
-             cat $TMPFILE
+             cat $SHADOWTMP
              ;;
          j)
              JOHNPATH=$OPTARG
@@ -74,7 +75,7 @@ do
              ;;
          u)
              USERN=$OPTARG
-             USERPASS=$(grep -w $USERN $TMPFILE | cut -d : -f 2)
+             USERPASS=$(grep -w $USERN $SHADOWTMP | cut -d : -f 2)
              if [ $USERPASS] ;then
                printf "\nPassword for user \"$USERN\" is $USERPASS\n"
              else
@@ -96,4 +97,4 @@ if [ $DPASS ]; then
      printf "\nNo username or password !!!!\n"
   fi
 fi
-#rm -y $TMPFILE 
+#rm -y $SHADOWTMP 
