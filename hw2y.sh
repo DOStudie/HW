@@ -22,12 +22,17 @@ exit 1
 }
 #Display help
 
-PASSFILE="/etc/shadow"
+SHADOWFILE="/etc/shadow"
 #file that conatin passwords in the system
 
 SHADOWTMP="/tmp/shadowtmp"
 #will contain all users with passwords that exist in the system
 
+PASSWDFILE="/etc/passwd"
+#contain all users settings
+
+PASSWDTMP="/tmp/passwdtmp"
+#will contain all users settings in tmp
 
 DPASS=
 #if set mean that decryption is needed
@@ -41,19 +46,21 @@ USERN=
 USERPASS=
 #contain encrypted password for user
 
-if [ ! -f $PASSFILE ]; then
-  printf "\nFile $PASSFILE does not exist"
+if [ ! -r $PASSWDFILE ]; then
+  printf "\nFile $PASSWDFILE : Permission denied!!!!!!!\nPlease run this script with root permission\n"
   exit 1
 fi
-#Checking if the $PASSFILE file exist
+#Checking if the $SHADOWFILE file exist
 
-if [ ! -r $PASSFILE ]; then
-    printf "\nFile $PASSFILE : Permission denied!!!!!!!\nPlease run this script with root permission"
+if [ ! -r $SHADOWFILE ]; then
+    printf "\nFile $SHADOWFILE : Permission denied!!!!!!!\nPlease run this script with root permission\n"
     exit 1
 fi 
-#Checking if the $PASSFILE file can be read by this user
+#Checking if the $SHADOWFILE file can be read by this user
 
-grep -v ":\*:" $PASSFILE | grep -v ":\!" > $SHADOWTMP
+cp -f $PASSWDFILE $PASSWDTMP
+
+grep -v ":\*:" $SHADOWFILE | grep -v ":\!" > $SHADOWTMP
 #Output all users with passwords to $SHADOWTMP
 
 while getopts "ahdu:j:" OPTION
