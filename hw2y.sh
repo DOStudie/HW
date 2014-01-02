@@ -83,10 +83,11 @@ do
          u)
              USERN=$OPTARG
              USERPASS=$(grep -w $USERN $SHADOWTMP | cut -d : -f 2)
-             if [ $USERPASS] ;then
+             if [ $USERPASS ] ;then
                printf "\nPassword for user \"$USERN\" is $USERPASS\n"
              else
                printf "\nNo password found for user \"$USERN\".\n"
+	       exit 1
              fi
              ;;
          *)
@@ -94,14 +95,21 @@ do
              exit
              ;;
      esac
-done
+done #Going throught all flags
 
 if [ $DPASS ]; then
   if [ ! $JOHNPATH ]; then printf "\nNo \"John the Ripper\" path specified !!!!!\n"; usage; exit 1; fi
   if [ $USERN ] && [ $USERPASS ]; then
-     printf "\nGO GO GO GO GO GO\n"
+	  if [ -e $JOHNPATH/john ]; then
+		  printf "\nStarting \"JOHN THE RIPPER\" for user $USERN\n"
+		  printf "$USERN:$USERPASS" > /tmp/johntmp
+		  $JOHNPATH/john /tmp/johntmp
+		  printf "The password is %s\n" $($JOHNPATH/john --show /tmp/johntmp | grep -w $USERN | cut -d : -f 2)
+	  else
+		  printf "\n\"JOHN THE RIPPER\" cannot be found in $JOHNPATH\n"
+	  fi #Checks if john file exist in th folder
   else
      printf "\nNo username or password !!!!\n"
-  fi
+  fi #Checks if the username ans password exist
 fi
 #rm -y $SHADOWTMP 
