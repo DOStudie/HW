@@ -28,17 +28,14 @@ SHADOWFILE="/etc/shadow"
 SHADOWTMP="/tmp/shadowtmp"
 #will contain all users with passwords that exist in the system
 
-PASSWDFILE="/etc/passwd"
-#contain all users settings
-
-PASSWDTMP="/tmp/passwdtmp"
-#will contain all users settings in tmp
-
 DPASS=
 #if set mean that decryption is needed
 
 JOHNPATH=
 #point to "John the Ripper" files location
+
+JOHNTMP="/tmp/johntmp"
+#will contain pre and after cracked data for john the ripper
 
 USERN=
 #username that need to be decrypt or shown
@@ -46,25 +43,16 @@ USERN=
 USERPASS=
 #contain encrypted password for user
 
-if [ ! -r $PASSWDFILE ]; then
-  printf "\nFile $PASSWDFILE : Permission denied!!!!!!!\nPlease run this script with root permission\n"
-  exit 1
-fi
-#Checking if the $SHADOWFILE file exist
-
 if [ ! -r $SHADOWFILE ]; then
     printf "\nFile $SHADOWFILE : Permission denied!!!!!!!\nPlease run this script with root permission\n"
     exit 1
 fi 
 #Checking if the $SHADOWFILE file can be read by this user
 
-cp -f $PASSWDFILE $PASSWDTMP
-
 grep -v ":\*:" $SHADOWFILE | grep -v ":\!" > $SHADOWTMP
 #Output all users with passwords to $SHADOWTMP
-if (($# == 0))
-  then 
 
+if (($# == 0)); then 
   usage
   exit 1
 fi
@@ -109,9 +97,9 @@ if [ $DPASS ]; then
   if [ $USERN ] && [ $USERPASS ]; then
 	  if [ -e $JOHNPATH/john ]; then
 		  printf "\nStarting \"JOHN THE RIPPER\" for user $USERN\n"
-		  printf "$USERN:$USERPASS" > /tmp/johntmp
-		  $JOHNPATH/john /tmp/johntmp
-		  printf "The password is %s\n" $($JOHNPATH/john --show /tmp/johntmp | grep -w $USERN | cut -d : -f 2)
+		  printf "$USERN:$USERPASS" > $JOHNTMP
+		  $JOHNPATH/john $JOHNTMP
+		  printf "The password is %s\n" $($JOHNPATH/john --show $JOHNTMP | grep -w $USERN | cut -d : -f 2)
 	  else
 		  printf "\n\"JOHN THE RIPPER\" cannot be found in $JOHNPATH\n"
 	  fi #Checks if john file exist in th folder
@@ -119,4 +107,5 @@ if [ $DPASS ]; then
      printf "\nNo username or password !!!!\n"
   fi #Checks if the username ans password exist
 fi
-#rm -y $SHADOWTMP 
+
+rm -f $SHADOWTMP $JOHNTMP
