@@ -62,10 +62,17 @@ cp -f $PASSWDFILE $PASSWDTMP
 
 grep -v ":\*:" $SHADOWFILE | grep -v ":\!" > $SHADOWTMP
 #Output all users with passwords to $SHADOWTMP
+if (($# == 0))
+  then 
+
+  usage
+  exit 1
+fi
 
 while getopts "ahdu:j:" OPTION
 do
      case $OPTION in
+
          h)
              usage
              exit 1
