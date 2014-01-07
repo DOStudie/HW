@@ -19,13 +19,8 @@ loop {                          # Servers run forever
 	iii = 1
 	while iii.to_i != 0                         # Servers run unti 0 receive
 		iii = client.recv(client.recv(6).to_i - 100000)
-		#iii = client.gets.chomp.to_s
+
 		print "\nClient sent:" + iii.to_s
-		#if iii.to_i == 999
-		#	client.write(100000 + rr.length)
-		#	client.write(rr) #Send history to client
-		#	rr = ""  #Clean history
-		#end
 
 		if iii.to_i != 0
 			ooo = case iii.to_i
