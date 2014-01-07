@@ -20,18 +20,43 @@ loop {                          # Servers run forever
 	while iii.to_i != 0                         # Servers run unti 0 receive
 		iii = client.gets.chomp.to_s
 		print "\nClient sent:" + iii
-		if iii.to_i != 0
-			ooo = "ffffff"
-			client.puts(ooo.to_s)  # Send data to the clien
-			rr = rr + "\n" + iii.to_s + ":" + ooo.to_s #Add to history
-		else
-			client.puts ""
-		end
-
 		if iii.to_i == 999 
 			client.puts(rr.to_s) #Send history to client
 			rr = ""  #Clean history
 		end
+
+		if iii.to_i != 0
+			ooo = case iii.to_i
+			when 1
+				"one"
+			when 2
+				"two"
+			when 3
+				"three"
+			when 4
+				"foure"
+			when 5
+				"five"
+			when 6
+				"six"
+			when 7
+				"seven"
+			when 8
+				"eight"
+			when 9
+				"nine"
+			when 10
+				"ten"
+			else 
+				"No value found!"
+			end
+			client.puts(ooo.to_s)  # Send data to the clien
+			rr = rr + "\n" + iii.to_s + ":" + ooo.to_s + "\n" #Add to history
+		else
+			client.puts ""
+		end
+
+		
 	end
 	client.close
 end
