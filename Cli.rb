@@ -14,25 +14,23 @@ require 'socket'      # Sockets are in standard library
 
 hostname = 'localhost'
 port = 2000
-int = 1
-line = "ttttttt"
-s = TCPSocket.open(hostname, port)
+kint = 1 # Keyboard input
+rline = "ttttttt" # Data received from Server
+soc = TCPSocket.open(hostname, port) # Open session to server
 
-while int.to_i != 0 
+while kint.to_i != 0 
 	print "Enter num 0..10: "
-	int = gets.chomp.to_i # Read number from the keyboard
-	if int >= 0 and int <= 999 
-		s.puts int
-		if int.to_i != 999
-			line = s.gets # Read the responce from server
-		else
-			line = s.recv(1024) #Read the history from server
-		end
-		if line
-			print "\nServer responded: " + line
+	kint = Integer(gets.chomp) rescue -999 # Read number from the keyboard, if not number -999 go to kint
+	
+	if ((kint >= 0 and kint <= 10) or (kint == 999))
+		soc.puts kint # Send data to Server
+		rline = soc.recv(1024) #Read data from server
+
+		if (rline and (kint.to_i != 0))
+			print "Server responded: " + rline.chomp + "\n"
 		end
 	else
-		print "\nNumber not in range\n"
+		print "Number not in range.\n"
 	end
 end
-s.close               # Close the socket when done
+soc.close               # Close the socket when done
