@@ -30,7 +30,7 @@ while kint.to_i != 0
 			print "Server responded: " + rline.chomp + "\n"
 		end
 	else
-		print "Number not in range.\n"
+		print "Input  not in range.\n"
 	end
 end
 soc.close               # Close the socket when done
