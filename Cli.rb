@@ -22,14 +22,16 @@ while kint.to_i != 0
 	print "Enter num 0..10: "
 	kint = Integer(gets.chomp) rescue -999 # Read number from the keyboard, if not number -999 go to kint
 	
-	if ((kint >= 0 and kint <= 10) or (kint == 999))
+	if ((kint > 0 and kint <= 10) or (kint == 999))
 		soc.puts kint # Send data to Server
-		rline = soc.recv(1024) #Read data from server
+		#rline = soc.recv(1024) #Read data from server
+		ll = soc.recv(6)
+		rline = soc.recv(ll.to_i - 100000)
 
 		if (rline and (kint.to_i != 0))
 			print "Server responded: " + rline.chomp + "\n"
 		end
-	else
+	elsif (kint != 0)
 		print "Input  not in range.\n"
 	end
 end

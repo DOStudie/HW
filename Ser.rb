@@ -12,7 +12,7 @@
 
 require 'socket'               # Get sockets from stdlib
 
-rr = ""
+rr = "\n"
 server = TCPServer.open(2000)  # Socket to listen on port 2000
 loop {                          # Servers run forever
 	Thread.start(server.accept) do |client| #Waiting for connection
@@ -20,10 +20,11 @@ loop {                          # Servers run forever
 	while iii.to_i != 0                         # Servers run unti 0 receive
 		iii = client.gets.chomp.to_s
 		print "\nClient sent:" + iii
-		if iii.to_i == 999 
-			client.puts(rr.to_s) #Send history to client
-			rr = ""  #Clean history
-		end
+		#if iii.to_i == 999
+		#	client.write(100000 + rr.length)
+		#	client.write(rr) #Send history to client
+		#	rr = ""  #Clean history
+		#end
 
 		if iii.to_i != 0
 			ooo = case iii.to_i
@@ -48,14 +49,19 @@ loop {                          # Servers run forever
 			when 10
 				"ten"
 			when 999
-					""
+				rr
 			else 
 				"No value found!"
 			end
-			client.puts(ooo.to_s)  # Send data to the clien
-			rr = rr + "\n" + iii.to_s + ":" + ooo.to_s + "\n" #Add to history
-		else
-			client.puts ""
+
+			client.write(100000 + ooo.to_s.length)
+			client.write(ooo.to_s)  # Send data to the clien
+			
+			if iii.to_i != 999
+				rr = rr + iii.to_s + ":" + ooo.to_s + "\n" #Add to history
+			else
+				rr ="\n"
+			end
 		end
 
 		
