@@ -47,6 +47,8 @@ loop {                          # Servers run forever
 				"nine"
 			when 10
 				"ten"
+			when 999
+					""
 			else 
 				"No value found!"
 			end
