@@ -7,7 +7,7 @@
 
 require 'socket'      # Sockets are in standard library
 
-hostname = 'localhost'
+hostname = '10.0.0.8'
 port = 2000
 kint = 999 # Keyboard input
 soc = TCPSocket.open(hostname, port) # Open session to server
