@@ -1,4 +1,8 @@
 require 'sinatra'
+#How to use:
+#1. run ruby rest.rb
+#2. on browser type http://localhost:4567/statuses/ 
+#3. and than number you want to see. (for example http://localhost:4567/statuses/9)
 
 get '/statuses/:id' do
   puts "insude /statuses/:id"
@@ -36,11 +40,6 @@ def test(id)
       "No value found!"
     end
 
-    
-    # if id.to_i != 999
-    #   rr = rr + id.to_s + ":" + output_value.to_s + "\n" #Add to history
-    # else
-    #   rr ="\n"
-    # end
+   
   end
 end
