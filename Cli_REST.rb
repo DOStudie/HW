@@ -33,9 +33,9 @@ while kint.to_i != 0
 
 		if ((res.code == 200) and (kint.to_i != 0))
 			rline = JSON.parse(res)
-			print "Server responded: #{rline["respond"]}\n"
+			puts "Server responded: #{rline["respond"]}"
 		end
 	elsif (kint != 0)
-		print "Input  not in range.\n"
+		puts "Input  not in range."
 	end
 end
