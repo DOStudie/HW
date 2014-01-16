@@ -1,5 +1,6 @@
 #
-# Thisd is simple server app for ruby
+# Thisd is simple REST server app for ruby
+# This server uses "sinatra" and "json" GEMs
 # Created Yuri
 # Input can be number 0 to 10 and 999.
 # On 0 server will send nil to client and close the connectio

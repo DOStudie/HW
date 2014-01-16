@@ -1,10 +1,11 @@
 #
-# This is a simple client for Ser.rb
+# This is a simple REST client for Ser_REST.rb
+# This client uses "rest-client" and "json" GEMs
 # Created by Yuri
 #
-# This client will open connectio on port 2000 to the server
+# This client will open connectio on port 2103 to the server
 # It read input from keyboard and send it to the server.
-# It read data back from the server
+# Then read data back from the server
 # Client will send 0 to server for disconnect
 # To get data client will send 1 to 10
 # To get all the history the client will send 999
