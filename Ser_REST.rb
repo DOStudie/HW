@@ -7,15 +7,13 @@
 # On 999 all the history (input:output) between cline-server will be sent to client and 
 # history will be cleaned.
 #
+# Usage "ruby Ser_REST.rb -p 2103"
+#
 
 require "sinatra"
 require "json"
 
 respond_to_client = ""
-
-get '/' do
-	"Hello to you"
-end
 
 get '/test/:request_from_client' do |num_ID| #main process
 	content_type :json

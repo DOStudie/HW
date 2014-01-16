@@ -12,7 +12,7 @@
 
 require 'socket'      # Sockets are in standard library
 
-hostname = '10.0.0.9'
+hostname = '10.0.0.4'
 port = 2000
 kint = 1 # Keyboard input
 rline = "ttttttt" # Data received from Server

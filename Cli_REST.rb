@@ -9,6 +9,8 @@
 # To get data client will send 1 to 10
 # To get all the history the client will send 999
 #
+# Make sure REST server runs un port 2103
+#
 
 require "rest_client"
 require "json"
@@ -26,11 +28,11 @@ while kint.to_i != 0
 	
 	if ((kint > 0 and kint <= 10) or (kint == 999))
 
-		res = RestClient.get hostname + ':' + port.to_s + '/test/' + kint.to_s
+		res = RestClient.get "#{hostname}:#{port.to_s}/test/#{kint.to_s}"
 
 		if ((res.code == 200) and (kint.to_i != 0))
 			rline = JSON.parse(res)
-			print "Server responded: " + rline["respond"] + "\n"
+			print "Server responded: #{rline["respond"]}\n"
 		end
 	elsif (kint != 0)
 		print "Input  not in range.\n"
