@@ -5,22 +5,19 @@
 #
 require 'mongo_mapper'
 require 'mongo'
-#require 'bson'
 
 
-file_name = "./filetoread.txt" # File name that will be read
+
+file_name = "/Users/zeevstolin/HW/filetoread.csv" # File name that will be read
 db_host = "localhost" # MongoDB db_host
 db_port = 27017 # MongoDB db_port
 db_name = "hw" # MongoDB Database
 db_collection = "hw4" # MongoDB Collection
 
+
 MongoMapper.connection = Mongo::Connection.new(db_host, db_port)
 MongoMapper.database = db_name
 
-def qwe (ttt)
-	puts ttt
-	{:rrr => "yuri", :tttt => "yosi"}
-end
 
 class Www 
   include MongoMapper::Document
@@ -28,16 +25,22 @@ class Www
   key :last_name, String
   key :age, Integer
   key :profession, String
-end #User class
+end 
 
-user = Www.create(:first_name => "yuri1", :last_name => "ddddddd1", :age => 20 , :profession => "none")
-user.save
+def qwe # reding data from /Users/zeevstolin/HW/filetoread.csv , mapping fields and transfering to Mongo
+	File.open('/Users/zeevstolin/HW/filetoread.csv', 'r') do |file|
+	  file.each_line do |line|
+	    fields = line.split(',')
+		user = Www.create(:first_name => fields[0], :last_name => fields[1], :age => fields[2].to_i , :profession => fields[3])
+		user.save
+	  end
+	end
+end
 
-rrr = Www.where(:first_name => "yuri").first
-puts rrr[:last_name]
+qwe
 
-e = qwe("fffffffffffff")
-puts "return: #{e}"
+
+
 
 
 
