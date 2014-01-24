@@ -1,5 +1,5 @@
 #
-# Connect to MongoDB database and search given collection.
+# Connect to MongoDB database and search in given collection.
 # Created by Yuri Groger
 #
 #
@@ -7,33 +7,56 @@
 require "./yuri_mongo_orm.rb"
 require 'optparse'
 
-HOST = "localhost"
-PORT = 27017
-DATABASE = "hw"
-USERNAME = ""
-PASSWORD = ""
-COLLECTION = "wwws"
-
-options = {}
+# Set default values
+host = "localhost"
+port = 27017
+database = "hw"
+username = ""
+password = ""
+collection = "wwws"
 
 opt_parser = OptionParser.new do |opt|
   opt.banner = "Usage: ruby hw4_find.rb [OPTIONS]"
   opt.separator  ""
-  opt.separator  "Options"
+  opt.separator "This program connect to MongoDB and search by:"
+  opt.separator "     First Name, Last Name, Age or Proffesion"
+  opt.separator ""
+  opt.separator  "Options:"
 
-  opt.on("-h","--host DB_HOST","specifi the MongoDB host") do |_host|
-    HOST = _host
+  opt.on("--host DB_HOST","Specifi the MongoDB host. Default: [#{host}]") do |_r|
+    host = _r
   end
 
-  opt.on("-?","--help","help") do
+  opt.on("--port PORT", Integer, "Specifi the MongoDB port. Default: [#{port.to_s}]") do |_r|
+    port = _r
+  end
+
+  opt.on("--db DATABASE", "Specifi the MongoDB database. Default: [#{database}]") do |_r|
+    database = _r
+  end
+
+  opt.on("--collection COLLECTION", "Specifi the MongoDB collection. Default: [#{collection}]") do |_r|
+    collection = _r
+  end
+
+  opt.on("--user USERNAME", "Specifi the MongoDB auth username. Default: [#{username}]") do |_r|
+    username = _r
+  end
+
+  opt.on("--pass PASSWORD", "Specifi the MongoDB auth username. Default: [#{password}]") do |_r|
+    password = _r
+  end
+
+  opt.on("-h","--help","help") do
     puts opt_parser
+    exit
   end
 end
 
-opt_parser.parse!
+opt_parser.parse!  # Check and if needed read external attributes
 
-db = YMongo.new(HOST,PORT,DATABASE,USERNAME,PASSWORD) #Connect to MongoDB
-ret = db.set_collection(COLLECTION) #Sel working collection
+db = YMongo.new(host,port,database,username,password) #Connect to MongoDB
+ret = db.set_collection(collection) #Sel working collection
 
 if !ret
 	puts "Cannot use collection #{COLLECTION}"
