@@ -13,7 +13,7 @@ def Instances_By_Tag(region,tag_key)
 		# puts "#{role}:" #Output current value for tag 'Role'
 		instances_for_tag = {}
 		instances.each do |inst| #Getting list of all instances for this tag value
-			instances_for_tag.merge({inst.id => inst.status})
+			instances_for_tag = instances_for_tag.merge({inst.id => inst.status})
 			#puts "   #{inst.id}" #Output all EC2 instances ids with current #{tag_key} tag value
 		end 
 		if !role then role = "NONE" end #If no value returnung for this tag, "NONE" will be placed as tag value
@@ -57,15 +57,13 @@ def load_all_html ()
 		html_out << "\n<table align=\"center\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">"
 		html_out << "<caption><b><b>#{tag_key}: #{tag_value.to_s}<\/b><\/b></caption>"
 
-		instances_for_tag_value.each do |i| #Getting list of instances for current tag
+		instances_for_tag_value.each do |id,stat| #Getting list of instances for current tag
 			# ins = ec2.instances[i]
-			i.each do |id,stat|
-				html_out << "\n<thead><tr>"
-				html_out << "<th scope=\"col\"><a href=\"\/instances\/#{id}\">#{id}</a></p></th>" #Shows instance id with link
-				html_out << "<th scope=\"col\">#{stat}</th>" #Shows instance status
-				html_out << "<th scope=\"col\">#{region}</th>" #Shows region
-				html_out << "</tr></thead>\n"
-			end
+			html_out << "\n<thead><tr>"
+			html_out << "<th scope=\"col\"><a href=\"\/instances\/#{id}\">#{id}</a></p></th>" #Shows instance id with link
+			html_out << "<th scope=\"col\">#{stat}</th>" #Shows instance status
+			html_out << "<th scope=\"col\">#{region}</th>" #Shows region
+			html_out << "</tr></thead>\n"
 		end #instances_for_tag_value.each
 
 		html_out << "\n</table><br><br>"
@@ -84,7 +82,8 @@ def load_all_html ()
 	#END - Building output html
 end # "/"
 
-	
+load_all_html
+
 get '/' do
 	tmp_out = "<html><head><meta http-equiv=\"refresh\" content=\"1\"></head><body><h1 style=\"text-align: center;\">Loading...</h></body></html>"
 
@@ -96,7 +95,6 @@ get '/' do
 		$is_running = true
 		$thr = Thread.new { load_all_html() }
 		tmp_out
-
 	end
 end
 
