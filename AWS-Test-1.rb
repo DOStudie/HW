@@ -82,7 +82,7 @@ def load_all_html ()
 	#END - Building output html
 end # "/"
 
-load_all_html
+
 
 get '/' do
 	tmp_out = "<html><head><meta http-equiv=\"refresh\" content=\"1\"></head><body><h1 style=\"text-align: center;\">Loading...</h></body></html>"
