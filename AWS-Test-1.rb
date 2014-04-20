@@ -2,6 +2,12 @@ require 'rubygems'
 require 'aws-sdk'
 require 'sinatra'
 
+#Global variables
+$is_done = false #true when list of instances ready
+$is_running = false #true when starting retriving the list of instances
+$out_page = "" #contain the diplaied page
+$thr = nil #thread that will run function to retrive list of instances
+
 #Create HASH list of all instances and ordere them by given tag in given region
 def Instances_By_Tag(region,tag_key)
 
@@ -24,14 +30,8 @@ def Instances_By_Tag(region,tag_key)
 	return instances_by_tag_value
 end
 
-
-
-$is_done = false
-$is_running = false
-$out_page = ""
-$thr = nil
-
-def load_all_html ()
+#Create HTML from list of instances 
+def Instances_To_HTML ()
 	html_err = "" # Wiill contain error message and will be deplayed if ASW enviromental variable are not set
 	html_out = "" # Will conatin HTML with all instances
     tag_key = "role" # By which tag instances will be grouped
@@ -39,14 +39,11 @@ def load_all_html ()
 	aws_id =  ENV['AWS_ACCESS_KEY_ID']
 	aws_key = ENV['AWS_SECRET_ACCESS_KEY']
 
-
-
 	html_err = "<html><head><title></title></head><body><h1 style=\"text-align: center;\">"
-	html_err << "Please set <br>\'AMAZON_ACCESS_KEY_ID\' and \'AMAZON_SECRET_ACCESS_KEY\' <br> enviroment variables"
+	html_err << "Please set <br>\'AWS_ACCESS_KEY_ID\' and \'AWS_SECRET_ACCESS_KEY\' <br> enviroment variables"
 	html_err << "</h1><br><br></body></html>"
 	
 	instances_by_tag_value = Instances_By_Tag(region,tag_key)
-	# ec2 = AWS::EC2.new(:region => region)
 
 	#START - Building output html that will be put in html_out
 	html_out = "<html><head><title>List of AWS instances by -= #{tag_key} =-</title></head>\n<body>"
@@ -58,7 +55,6 @@ def load_all_html ()
 		html_out << "<caption><b><b>#{tag_key}: #{tag_value.to_s}<\/b><\/b></caption>"
 
 		instances_for_tag_value.each do |id,stat| #Getting list of instances for current tag
-			# ins = ec2.instances[i]
 			html_out << "\n<thead><tr>"
 			html_out << "<th scope=\"col\"><a href=\"\/instances\/#{id}\">#{id}</a></p></th>" #Shows instance id with link
 			html_out << "<th scope=\"col\">#{stat}</th>" #Shows instance status
@@ -67,11 +63,9 @@ def load_all_html ()
 		end #instances_for_tag_value.each
 
 		html_out << "\n</table><br><br>"
-
 	end # instances_by_tag_value.each
 
 	html_out << "\n</body></html>"
-
 	$is_done = true
 
 	if !aws_id or !aws_key # Check if AWS enviroment variables are set
@@ -80,7 +74,7 @@ def load_all_html ()
 		$out_page = html_out
 	end
 	#END - Building output html
-end # "/"
+end
 
 
 
@@ -88,13 +82,13 @@ get '/' do
 	tmp_out = "<html><head><meta http-equiv=\"refresh\" content=\"1\"></head><body><h1 style=\"text-align: center;\">Loading...</h></body></html>"
 
 	if $is_done
-		$out_page
+		$out_page #show error or instances html page
 	elsif $is_running
-		tmp_out
+		tmp_out #show the "Loading..." page
 	else
 		$is_running = true
-		$thr = Thread.new { load_all_html() }
-		tmp_out
+		$thr = Thread.new { Instances_To_HTML() } #create thread and start retriving list of instances
+		tmp_out #show the "Loading..." page
 	end
 end
 
